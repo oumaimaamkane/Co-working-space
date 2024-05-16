@@ -15,6 +15,10 @@ class Espace extends Model
         'price',
         'capacity',
         'client_categorie',
-        'images',
     ];
+
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'espace_service', 'espace_id', 'service_id');
+    }
 }

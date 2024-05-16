@@ -18,9 +18,11 @@ return new class extends Migration
             $table->enum('status', ['valable', 'reserver'])->default('valable'); 
             $table->decimal('price', 8, 2);
             $table->integer('capacity');
-            $table->enum('client_categorie', ['freelencer', 'start-up', 'entreprise']); 
-            $table->string('images');
+            $table->enum('client_categorie', ['freelencer', 'start-up', 'entreprise']);
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
