@@ -21,8 +21,8 @@ return new class extends Migration
             $table->enum('status', ['confirmed', 'canceled'])->default('confirmed');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('espace_id')->references('id')->on('espaces');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('espace_id')->references('id')->on('espaces')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
