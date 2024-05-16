@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('floor');
             $table->text('description');
-            $table->enum('status', ['valable', 'reserver'])->default('valable'); 
+            $table->enum('status', ['valable', 'reserver'])->default('valable');
             $table->decimal('price', 8, 2);
             $table->integer('capacity');
             $table->enum('client_categorie', ['freelencer', 'start-up', 'entreprise']);
