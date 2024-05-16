@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class espace_service extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
+        'espace_id',
+        'service_id',
     ];
-    public function espaces()
-    {
-        return $this->belongsToMany(Espace::class);
-    }
 }
