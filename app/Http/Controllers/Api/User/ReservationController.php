@@ -1,10 +1,6 @@
 <?php
 
-<<<<<<<< HEAD:app/Http/Controllers/Api/ReservationController.php
-namespace App\Http\Controllers\Api;
-========
 namespace App\Http\Controllers\Api\User;
->>>>>>>> 8132f1a407d9c370700bf9de3b6bbadff68b9b8e:app/Http/Controllers/Api/User/ReservationController.php
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
