@@ -1,54 +1,53 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Service;
+use App\Http\Controllers\Controller;
+use App\Models\Equipement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ServiceController extends Controller
+
+class EquipementController extends Controller
 {
     public function index(){
-        $services = Service::all();
-        return response()->json($services);
+        $equipements = Equipement::all();
+        return response()->json($equipements);
     }
 
     public function store(Request $request){
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif',
         ]);
 
         if($validator->fails()){
             return response()->json(['errors' => $validator->errors()], 400);
         }
-        $service = Service::create([
+        $equipement = Equipement::create([
             'name' => $request->input('name'),
-            'image' => $request->input('image'),
         ]);
-        return response()->json($service, 201);
+        return response()->json($equipement, 201);
 
     }
 
     public function update(Request $request, $id){
 
-        $service = Service::findOrFail($id);
+        $equipement = Equipement::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif',
         ]);
         if($validator->fails()){
             return response()->json(['errors' => $validator->errors()], 400);
         }
-        $service->update($request->all());
-        return response()->json($service, 200);
+        $equipement->update($request->all());
+        return response()->json($equipement, 200);
     }
 
     public function destroy(Request $request, $id){
-        $service = Service::findOrFail($id);
-        $service->delete();
+        $equipement = Equipement::findOrFail($id);
+        $equipement->delete();
         return response()->json(null, 204);
 
     }
