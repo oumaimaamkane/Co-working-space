@@ -9,4 +9,14 @@ class Category extends Model
 {
     use HasFactory;
 
+
+    protected $fillable = [
+        'name',
+    ];
+
+    public function espaces()
+    {
+        return $this->hasMany(Espace::class);
+    }
+
 }
