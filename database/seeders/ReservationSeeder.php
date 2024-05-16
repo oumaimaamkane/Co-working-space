@@ -16,7 +16,7 @@ class ReservationSeeder extends Seeder
             [
                 'check_in_date' => '2024-03-01',
                 'check_out_date' => '2024-03-05',
-                'status' => 'Confirmed',
+                'status' => 'confirmed',
                 'total_price' => 2000,
                 'user_id' => 1,
                 'espace_id' => 1,
@@ -24,7 +24,7 @@ class ReservationSeeder extends Seeder
             [
                 'check_in_date' => '2024-03-10',
                 'check_out_date' => '2024-03-15',
-                'status' => 'Due In',
+                'status' => 'confirmed',
                 'total_price' => 1000,
                 'user_id' => 2,
                 'espace_id' => 2,
@@ -32,7 +32,7 @@ class ReservationSeeder extends Seeder
             [
                 'check_in_date' => '2024-03-20',
                 'check_out_date' => '2024-03-25',
-                'status' => 'Checked In',
+                'status' => 'confirmed',
                 'total_price' => 4000,
                 'user_id' => 3,
                 'espace_id' => 3,

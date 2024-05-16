@@ -29,6 +29,7 @@ class EspaceSeeder extends Seeder
                 'capacity' => 6,
                 'client_categorie' => 'entreprise',
                 'category_id' => 1,
+                'floor' => 1,
             ],
             [
                 'description' => 'this is a space description',
