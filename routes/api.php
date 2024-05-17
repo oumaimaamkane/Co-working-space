@@ -26,18 +26,29 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
-    Route::middleware('auth:api')->group(function () {
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('user', [AuthController::class, 'user']);
-    });
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::middleware('auth:api')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('user', [AuthController::class, 'user']);
+});
 
 
-    Route::apiResource('equipements', EquipementController::class);
-    Route::apiResource('services', ServiceController::class);
+Route::apiResource('equipements', EquipementController::class);
+Route::apiResource('services', ServiceController::class);
 
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('espaces', EspaceController::class);
-    Route::apiResource('reservations', ReservationController::class);
+Route::apiResource('categories', CategoryController::class);
+Route::apiResource('espaces', EspaceController::class);
 
+Route::middleware(['auth:api'])->group(function () {
+
+    Route::apiResource('/user/reservations', ReservationController::class)->names([
+        'index' => 'user.reservations.index',
+        'create' => 'user.reservations.create',
+        'store' => 'user.reservations.store',
+        'show' => 'user.reservations.show',
+        'edit' => 'user.reservations.edit',
+        'update' => 'user.reservations.update',
+        'destroy' => 'user.reservations.destroy'
+    ]);
+});

@@ -72,4 +72,9 @@ class User extends Authenticatable implements HasMedia, JWTSubject
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function espaces()
+    {
+        return $this->hasMany(Espace::class);
+    }
 }
