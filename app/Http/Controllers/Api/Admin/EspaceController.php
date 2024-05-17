@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Espace;
@@ -19,14 +19,12 @@ class EspaceController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'floor' => 'required|integer',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'required|string|max:1000',
             'status' => 'required|string|in:valable,reserver',
             'price' => 'required|numeric|min:0.01',
             'capacity' => 'required|integer',
             'client_categorie' => 'required|string|in:freelancer,start,entreprise',
             'category_id' => 'required|exists:categories,id|integer',
-            'check_in_date' => 'nullable|date_format:Y-m-d H:i:s',
-            'check_out_date' => 'nullable|date_format:Y-m-d H:i:s',
             'images' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
 
@@ -48,7 +46,7 @@ class EspaceController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'floor' => 'integer',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'required|string|max:1000',
             'status' => 'string|in:valable,reserver',
             'price' => 'numeric|min:0.01',
             'capacity' => 'integer',
