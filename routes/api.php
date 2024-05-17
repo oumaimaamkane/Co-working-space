@@ -1,16 +1,13 @@
 <?php
 
-<<<<<<< HEAD
+
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\EquipementController;
 use App\Http\Controllers\Api\Admin\EspaceController;
 use App\Http\Controllers\Api\Admin\ServiceController;
-=======
-use App\Http\Controllers\Api\EquipementController;
-use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\User\ReservationController;
 use App\Http\Controllers\Api\Auth\AuthController;
->>>>>>> a2b84b3872fc1e777bb5b358bad0fc57bd88aab5
+use App\Models\Equipement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,9 +36,8 @@ use Illuminate\Support\Facades\Route;
 
     Route::apiResource('equipements', EquipementController::class);
     Route::apiResource('services', ServiceController::class);
-<<<<<<< HEAD
+
     Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('services', EspaceController::class);
-=======
+    Route::apiResource('espaces', EspaceController::class);
     Route::apiResource('reservations', ReservationController::class);
->>>>>>> a2b84b3872fc1e777bb5b358bad0fc57bd88aab5
+
