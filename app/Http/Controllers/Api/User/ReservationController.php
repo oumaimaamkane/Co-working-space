@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -13,7 +15,14 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
+        $reservations = Reservation::with('payment')->where('user_id', Auth::id())->get();
+
+        if ($reservations->isEmpty()) {
+            return response()->json([
+                'message' => 'No Reservation found.',
+            ], 404);
+        }
+        return response()->json(array('reservations' => $reservations));
     }
 
     /**
@@ -21,7 +30,7 @@ class ReservationController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**

@@ -5,16 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class espace_service extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'reservation_id',
+        'espace_id',
+        'service_id',
     ];
-
-    public function reservation()
-    {
-        return $this->belongsTo(Reservation::class);
-    }
 }

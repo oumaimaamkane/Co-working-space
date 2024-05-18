@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Service extends Model implements HasMedia
+class Category extends Model
 {
-    use HasFactory, InteractsWithMedia;
+    use HasFactory;
+
+
     protected $fillable = [
         'name',
     ];
+
     public function espaces()
     {
-        return $this->belongsToMany(Espace::class);
+        return $this->hasMany(Espace::class);
     }
 }
