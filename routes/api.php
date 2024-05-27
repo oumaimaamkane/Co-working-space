@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\EquipementController;
 use App\Http\Controllers\Api\Admin\EspaceController;
 use App\Http\Controllers\Api\Admin\ServiceController;
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\User\ReservationController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Models\Equipement;
@@ -40,4 +41,8 @@ use Illuminate\Support\Facades\Route;
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('espaces', EspaceController::class);
     Route::apiResource('reservations', ReservationController::class);
+
+    Route::patch('/users/{id}', [UserController::class, 'banUser'])->name('users.ban');
+    Route::patch('/users/{id}', [UserController::class, 'cancelBanUser'])->name('users.cancelBan');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
