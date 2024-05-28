@@ -12,14 +12,12 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Service::with('media')->get();
-        $services = $services->map(function ($service) {
-            return [
-                'id' => $service->id,
-                'name' => $service->name,
-                'image' => $service->getFirstMediaUrl('ServiceImages'),
-            ];
+        $services = Service::all()->map(function($service) {
+            $service->image = $service->getFirstMediaUrl('ServiceImages');
+            // $service->image = url('storage/' . $service->getFirstMediaUrl('ServiceImages'));
+            return $service;
         });
+    
         return response()->json($services);
     }
     

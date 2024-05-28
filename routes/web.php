@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $services = Service::all()->map(function($service) {
+        $service->image = $service->getFirstMediaUrl('ServiceImages');
+        return $service;
+    });
+
+    return view('services.index', compact('services'));
 });
