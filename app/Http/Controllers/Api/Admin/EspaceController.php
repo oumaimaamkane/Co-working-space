@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Espace;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -11,9 +13,17 @@ class EspaceController extends Controller
 {
     public function index()
     {
+        // $espaceData = [
+        //     'espaces' => Espace::all(),
+        //     'categories' => Category::all(),
+        //     'services' => Service::all(),
+        // ];
+    
+        // return response()->json($espaceData);
         $espaces = Espace::all();
         return response()->json($espaces);
     }
+    
 
     public function store(Request $request)
     {
@@ -32,15 +42,18 @@ class EspaceController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $espace = Espace::create($request->except('images'));
+        $espace = Espace::create($request->except('images', 'service_id'));
 
         if ($request->hasFile('images')) {
             $espace->addMedia($request->file('images'))->toMediaCollection('EspaceImages');
         }
 
-        return response()->json($espace, 201);
-    }
+        if ($request->has('service_id')) {
+            $espace->services()->attach($request->input('service_id'));
+        }
 
+        return response()->json(['message' => 'Espace created successfully', 'espace' => $espace], 201);
+    }
 
     public function update(Request $request, Espace $espace)
     {
@@ -50,39 +63,36 @@ class EspaceController extends Controller
             'status' => 'string|in:valable,reserver',
             'price' => 'numeric|min:0.01',
             'capacity' => 'integer',
-            'client_categorie' => 'string|in:freelancer,start,entreprise',
+            'client_categorie' => 'string|in:freelancer,start-up,entreprise',
             'category_id' => 'exists:categories,id|integer',
             'images' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-    
+
         if ($request->hasFile('images')) {
             $espace->clearMediaCollection('EspaceImages');
             $espace->addMedia($request->file('images'))->toMediaCollection('EspaceImages');
         }
-    
+
         $espace->update($request->except(['images', 'service_id']));
-    
-        // Update espace services
+
         if ($request->has('service_id')) {
             $espace->services()->sync($request->input('service_id'));
         } else {
             $espace->services()->detach();
         }
-    
-        return response()->json($espace, 200);
-    }
-    
 
+        return response()->json(['message' => 'Espace updated successfully', 'espace' => $espace], 200);
+    }
 
     public function destroy(Espace $espace)
     {
         $espace->delete();
-    
-        return response()->json(null, 204);
+
+        return response()->json(['message' => 'Espace deleted successfully'], 204);
     }
-    
 }
+
