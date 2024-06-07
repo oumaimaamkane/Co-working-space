@@ -17,6 +17,7 @@ class Espace extends Model implements HasMedia
         'price',
         'capacity',
         'client_categorie',
+    'category_id',
     ];
 
     public function services()
@@ -34,9 +35,10 @@ class Espace extends Model implements HasMedia
         return $this->hasMany(Reservation::class);
     }
 
+    protected $with = ['category'];
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id' , 'id');
     }
 
     public function user()

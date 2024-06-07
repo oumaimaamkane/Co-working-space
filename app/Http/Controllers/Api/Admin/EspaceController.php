@@ -27,6 +27,7 @@ class EspaceController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'floor' => 'required|integer',
             'description' => 'required|string|max:1000',

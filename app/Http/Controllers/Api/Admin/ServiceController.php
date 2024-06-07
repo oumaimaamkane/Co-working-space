@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
@@ -50,29 +51,56 @@ class ServiceController extends Controller
     }
 
 
+
+
     public function update(Request $request, $id)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
     
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
     
-        $service = Service::findOrFail($id);    
-    
-        $service->update($request->except('image'));
+        $service = Service::findOrFail($id);
+        $service->update([
+            'name' => $request->input('name'),
+        ]);
     
         if ($request->hasFile('image')) {
-            $service->clearMediaCollection('images');
-            
-            $service->addMedia($request->file('image'))->toMediaCollection('images');
+            if ($service->hasMedia('ServiceImages')) {
+                $service->clearMediaCollection('ServiceImages');
+            }
+    
+            $media = $service->addMedia($request->file('image'))->toMediaCollection('ServiceImages');
+            $imageUrl = $media->getUrl();
+        } else {
+            $media = $service->getFirstMedia('ServiceImages');
+            $imageUrl = $media ? $media->getUrl() : null;
         }
     
-        return response()->json($service, 200);
+        return response()->json([
+            'service' => $service,
+            'image' => $imageUrl,
+        ], 200);
     }
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function destroy(Request $request, $id)
     {
@@ -80,4 +108,5 @@ class ServiceController extends Controller
         $service->delete();
         return response()->json(null, 204);
     }
+    
 }
