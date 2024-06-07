@@ -36,6 +36,7 @@ class CategoryController extends Controller
 
         $category = Category::findOrFail($id);
 
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
         ]);
