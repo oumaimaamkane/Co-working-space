@@ -55,38 +55,40 @@ class ServiceController extends Controller
 
     public function update(Request $request, $id)
     {
-        dd($request->all());
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-        ]);
+        $service = Service::find($id);
     
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+        if (!$service) {
+            return response()->json(['error' => 'Service not found'], 404);
         }
     
-        $service = Service::findOrFail($id);
-        $service->update([
-            'name' => $request->input('name'),
+        // Validate the incoming request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
+        // Update service name
+        $service->name = $request->input('name');
+    
+        // Handle the file upload if a file is provided
         if ($request->hasFile('image')) {
+            // Remove the old image if it exists
             if ($service->hasMedia('ServiceImages')) {
                 $service->clearMediaCollection('ServiceImages');
             }
     
-            $media = $service->addMedia($request->file('image'))->toMediaCollection('ServiceImages');
-            $imageUrl = $media->getUrl();
-        } else {
-            $media = $service->getFirstMedia('ServiceImages');
-            $imageUrl = $media ? $media->getUrl() : null;
+            // Add the new image to the media library
+            $service->addMediaFromRequest('image')->toMediaCollection('ServiceImages');
         }
     
-        return response()->json([
-            'service' => $service,
-            'image' => $imageUrl,
-        ], 200);
+        $service->save();
+    
+        // Fetch the URL of the newly uploaded image
+        $imageUrl = $service->getFirstMediaUrl('ServiceImages');
+    
+        return response()->json(['service' => $service, 'image' => $imageUrl], 200);
     }
+
     
     
 

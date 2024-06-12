@@ -27,22 +27,47 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
-    Route::middleware('auth:api')->group(function () {
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('user', [AuthController::class, 'user']);
-    });
+    // Route::post('register', [AuthController::class, 'register']);
+    // Route::post('login', [AuthController::class, 'login']);
+    // Route::middleware('auth:api')->group(function () {
+    //     Route::post('logout', [AuthController::class, 'logout']);
+    //     Route::get('user', [AuthController::class, 'user']);
+    // });
 
 
-    Route::apiResource('equipements', EquipementController::class);
-    Route::apiResource('services', ServiceController::class);
+    // Route::apiResource('equipements', EquipementController::class);
 
-    Route::apiResource('categories', CategoryController::class);
-    Route::apiResource('espaces', EspaceController::class);
-    Route::apiResource('reservations', ReservationController::class);
+    //     Route::get('services', [ServiceController::class, 'index']);
+    //     Route::post('services', [ServiceController::class, 'store']);
+    //     Route::put('services/{id}', [ServiceController::class, 'update']);
+    //     Route::delete('services/{id}', [ServiceController::class, 'destroy']);
 
-    Route::patch('/users/{id}', [UserController::class, 'banUser'])->name('users.ban');
-    Route::patch('/users/{id}', [UserController::class, 'cancelBanUser'])->name('users.cancelBan');
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
+    // Route::apiResource('categories', CategoryController::class);
+    // Route::apiResource('espaces', EspaceController::class);
+    // Route::apiResource('reservations', ReservationController::class);
+
+    
+    
+    Route::middleware('cors')->group(function(){
+        Route::post('register', [AuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+        Route::middleware('auth:api')->group(function () {
+            Route::post('logout', [AuthController::class, 'logout']);
+            Route::get('user', [AuthController::class, 'user']);
+            });
+            
+            
+            Route::apiResource('equipements', EquipementController::class);
+            Route::apiResource('services', ServiceController::class);
+            
+            Route::apiResource('categories', CategoryController::class);
+            Route::apiResource('espaces', EspaceController::class);
+            Route::apiResource('reservations', ReservationController::class);
+            
+            });
+            
+            
+            Route::patch('/users/{id}', [UserController::class, 'banUser'])->name('users.ban');
+            Route::patch('/users/{id}', [UserController::class, 'cancelBanUser'])->name('users.cancelBan');
+            Route::get('/users', [UserController::class, 'index'])->name('users.index');
