@@ -19,6 +19,8 @@ class Espace extends Model implements HasMedia
         'client_categorie',
     ];
 
+    protected $with = ['category'];
+
     public function services()
     {
         return $this->belongsToMany(Service::class, 'espace_service', 'espace_id', 'service_id');

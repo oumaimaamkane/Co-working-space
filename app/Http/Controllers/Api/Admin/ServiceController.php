@@ -20,7 +20,7 @@ class ServiceController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         if ($validator->fails()) {
@@ -39,21 +39,21 @@ class ServiceController extends Controller
             'name' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-    
-        $service = Service::findOrFail($id);    
-    
+
+        $service = Service::findOrFail($id);
+
         $service->update($request->except('image'));
-    
+
         if ($request->hasFile('image')) {
             $service->clearMediaCollection('images');
-            
+
             $service->addMedia($request->file('image'))->toMediaCollection('images');
         }
-    
+
         return response()->json($service, 200);
     }
 
