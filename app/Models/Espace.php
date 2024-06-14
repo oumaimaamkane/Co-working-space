@@ -16,18 +16,17 @@ class Espace extends Model implements HasMedia
         'status',
         'price',
         'capacity',
-        'client_categorie',
-    'category_id',
+        'category_id',
     ];
 
     public function services()
     {
-        return $this->belongsToMany(Service::class, 'espace_service', 'espace_id', 'service_id');
+        return $this->belongsToMany(Service::class, 'espace-service', 'espace_id', 'service_id');
     }
 
     public function equipements()
     {
-        return $this->belongsToMany(Equipement::class, 'espace_equipement', 'espace_id', 'equipement_id');
+        return $this->belongsToMany(Equipement::class, 'espace-equipement', 'espace_id', 'equipement_id');
     }
 
     public function reservations()

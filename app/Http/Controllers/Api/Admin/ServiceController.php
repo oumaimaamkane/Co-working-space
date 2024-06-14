@@ -18,7 +18,7 @@ class ServiceController extends Controller
             // $service->image = url('storage/' . $service->getFirstMediaUrl('ServiceImages'));
             return $service;
         });
-    
+     
         return response()->json($services);
     }
     

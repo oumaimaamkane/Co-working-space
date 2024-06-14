@@ -13,13 +13,6 @@ class EspaceController extends Controller
 {
     public function index()
     {
-        // $espaceData = [
-        //     'espaces' => Espace::all(),
-        //     'categories' => Category::all(),
-        //     'services' => Service::all(),
-        // ];
-    
-        // return response()->json($espaceData);
         $espaces = Espace::all();
         return response()->json($espaces);
     }
@@ -27,34 +20,39 @@ class EspaceController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        dd($request->images); // This will dump the request data and halt execution
+    
         $validator = Validator::make($request->all(), [
             'floor' => 'required|integer',
             'description' => 'required|string|max:1000',
             'status' => 'required|string|in:valable,reserver',
             'price' => 'required|numeric|min:0.01',
             'capacity' => 'required|integer',
-            'client_categorie' => 'required|string|in:freelancer,start,entreprise',
             'category_id' => 'required|exists:categories,id|integer',
-            'images' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif', // validate each image
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
+    
         $espace = Espace::create($request->except('images', 'service_id'));
-
+    
         if ($request->hasFile('images')) {
-            $espace->addMedia($request->file('images'))->toMediaCollection('EspaceImages');
+            foreach ($request->file('images') as $image) {
+                $espace->addMedia($image)->toMediaCollection('EspaceImages');
+            }
         }
-
+    
         if ($request->has('service_id')) {
             $espace->services()->attach($request->input('service_id'));
         }
-
-        return response()->json(['message' => 'Espace created successfully', 'espace' => $espace], 201);
+    
+        return response()->json($espace, 201);
     }
+    
+    
+    
 
     public function update(Request $request, Espace $espace)
     {
@@ -64,7 +62,6 @@ class EspaceController extends Controller
             'status' => 'string|in:valable,reserver',
             'price' => 'numeric|min:0.01',
             'capacity' => 'integer',
-            'client_categorie' => 'string|in:freelancer,start-up,entreprise',
             'category_id' => 'exists:categories,id|integer',
             'images' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
