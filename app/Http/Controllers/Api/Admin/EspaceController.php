@@ -13,15 +13,47 @@ class EspaceController extends Controller
 {
     public function index()
     {
-        $espaces = Espace::all();
+        $espaces = Espace::with('category')->get()->map(function ($espace) {
+            $espace->first_image_url = $espace->first_image_url; // This calls the getFirstImageUrlAttribute method
+            return $espace;
+        });
+    
         return response()->json($espaces);
     }
     
 
-    public function store(Request $request)
-    {
-        dd($request->images); // This will dump the request data and halt execution
+    // public function store(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'floor' => 'required|integer',
+    //         'description' => 'required|string|max:1000',
+    //         'status' => 'required|string|in:valable,reserver',
+    //         'price' => 'required|numeric|min:0.01',
+    //         'capacity' => 'required|integer',
+    //         'category_id' => 'required|exists:categories,id|integer',
+    //         'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+    //     ]);
     
+    //     if ($validator->fails()) {
+    //         return response()->json(['errors' => $validator->errors()], 400);
+    //     }
+    
+    //     $espace = Espace::create($request->except('images', 'service_id'));
+    
+    //     if ($request->hasFile('images')) {
+    //         foreach ($request->file('images') as $image) {
+    //             $espace->addMedia($image)->toMediaCollection('EspaceImages');
+    //         }
+    //     }
+    
+    //     if ($request->has('service_id')) {
+    //         $espace->services()->attach($request->input('service_id'));
+    //     }
+    
+    //     return response()->json($espace, 201);
+    // }
+    public function store(Request $request)
+{
         $validator = Validator::make($request->all(), [
             'floor' => 'required|integer',
             'description' => 'required|string|max:1000',
@@ -29,27 +61,33 @@ class EspaceController extends Controller
             'price' => 'required|numeric|min:0.01',
             'capacity' => 'required|integer',
             'category_id' => 'required|exists:categories,id|integer',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif', // validate each image
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
     
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-    
-        $espace = Espace::create($request->except('images', 'service_id'));
-    
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $espace->addMedia($image)->toMediaCollection('EspaceImages');
-            }
+
+    $espace = Espace::create($request->except('images', 'service_id'));
+
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $espace->addMedia($image)->toMediaCollection('EspaceImages');
         }
-    
-        if ($request->has('service_id')) {
-            $espace->services()->attach($request->input('service_id'));
-        }
-    
-        return response()->json($espace, 201);
     }
+
+    if ($request->has('service_id')) {
+        $espace->services()->attach($request->input('service_id'));
+    }
+
+    // Ensure the espace is loaded with all necessary relationships and attributes
+    $espace->load('category');
+    $espace->first_image_url = $espace->first_image_url;
+
+    return response()->json(['espace' => $espace], 201);
+}
+
+    
     
     
     

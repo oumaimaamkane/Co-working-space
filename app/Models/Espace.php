@@ -10,6 +10,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Espace extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+
     protected $fillable = [
         'floor',
         'description',
@@ -18,6 +19,7 @@ class Espace extends Model implements HasMedia
         'capacity',
         'category_id',
     ];
+    protected $appends = ['first_image_url'];
 
     public function services()
     {
@@ -35,13 +37,20 @@ class Espace extends Model implements HasMedia
     }
 
     protected $with = ['category'];
+
     public function category()
     {
-        return $this->belongsTo(Category::class, 'category_id' , 'id');
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+ 
+    public function getFirstImageUrlAttribute()
+    {
+        $media = $this->getFirstMedia('EspaceImages');
+        return $media ? $media->getUrl() : null;
     }
 }
