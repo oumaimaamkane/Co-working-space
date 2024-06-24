@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('espace_id');
             $table->unsignedBigInteger('equipement_id');
-            $table->integer('quantity');
             $table->timestamps();
         
             $table->foreign('espace_id')->references('id')->on('espaces');

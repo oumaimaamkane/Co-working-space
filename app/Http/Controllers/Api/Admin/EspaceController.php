@@ -68,7 +68,7 @@ class EspaceController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-    $espace = Espace::create($request->except('images', 'service_id'));
+    $espace = Espace::create($request->except('images', 'service_id', 'equipement_id'));
 
     if ($request->hasFile('images')) {
         foreach ($request->file('images') as $image) {
@@ -78,6 +78,9 @@ class EspaceController extends Controller
 
     if ($request->has('service_id')) {
         $espace->services()->attach($request->input('service_id'));
+    }
+    if ($request->has('equipement_id')) {
+        $espace->equipements()->attach($request->input('equipement_id'));
     }
 
     // Ensure the espace is loaded with all necessary relationships and attributes
@@ -113,16 +116,41 @@ class EspaceController extends Controller
             $espace->addMedia($request->file('images'))->toMediaCollection('EspaceImages');
         }
 
-        $espace->update($request->except(['images', 'service_id']));
+        $espace->update($request->except(['images', 'service_id', 'equipement_id']));
 
         if ($request->has('service_id')) {
             $espace->services()->sync($request->input('service_id'));
         } else {
             $espace->services()->detach();
         }
+        if ($request->has('equipement_id')) {
+            $espace->equipements()->sync($request->input('equipement_id'));
+        } else {
+            $espace->equipements()->detach();
+        }
 
         return response()->json(['message' => 'Espace updated successfully', 'espace' => $espace], 200);
     }
+
+
+
+
+
+    public function show($id)
+    {
+        try {
+            $espace = Espace::with(['services', 'equipements', 'category'])->findOrFail($id);
+            return response()->json(['espace' => $espace], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Espace not found'], 404);
+        }
+    }
+
+
+
+
+
+
 
     public function destroy(Espace $espace)
     {

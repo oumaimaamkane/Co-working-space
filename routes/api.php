@@ -63,6 +63,7 @@ use Illuminate\Support\Facades\Route;
             
             Route::apiResource('categories', CategoryController::class);
             Route::apiResource('espaces', EspaceController::class);
+            Route::get('espaces/{id}', [EspaceController::class, 'show']);
             Route::apiResource('reservations', ReservationController::class);
             
             });
