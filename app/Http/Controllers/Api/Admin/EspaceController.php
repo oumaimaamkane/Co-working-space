@@ -95,42 +95,54 @@ class EspaceController extends Controller
     
     
 
-    public function update(Request $request, Espace $espace)
-    {
-        $validator = Validator::make($request->all(), [
-            'floor' => 'integer',
-            'description' => 'required|string|max:1000',
-            'status' => 'string|in:valable,reserver',
-            'price' => 'numeric|min:0.01',
-            'capacity' => 'integer',
-            'category_id' => 'exists:categories,id|integer',
-            'images' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-        ]);
+public function update(Request $request, Espace $espace)
+{
+    $validator = Validator::make($request->all(), [
+        'floor' => 'integer',
+        'description' => 'required|string|max:1000',
+        'status' => 'string|in:valable,reserver',
+        'price' => 'numeric|min:0.01',
+        'capacity' => 'integer',
+        'category_id' => 'exists:categories,id|integer',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
-        if ($request->hasFile('images')) {
-            $espace->clearMediaCollection('EspaceImages');
-            $espace->addMedia($request->file('images'))->toMediaCollection('EspaceImages');
-        }
-
-        $espace->update($request->except(['images', 'service_id', 'equipement_id']));
-
-        if ($request->has('service_id')) {
-            $espace->services()->sync($request->input('service_id'));
-        } else {
-            $espace->services()->detach();
-        }
-        if ($request->has('equipement_id')) {
-            $espace->equipements()->sync($request->input('equipement_id'));
-        } else {
-            $espace->equipements()->detach();
-        }
-
-        return response()->json(['message' => 'Espace updated successfully', 'espace' => $espace], 200);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
     }
+
+    // Handle images
+    if ($request->hasFile('images')) {
+        // Clear previous images
+        $espace->clearMediaCollection('EspaceImages');
+        
+        // Add new images
+        foreach ($request->file('images') as $image) {
+            $espace->addMedia($image)->toMediaCollection('EspaceImages');
+        }
+    }
+
+    // Update other fields
+    $espace->update($request->except(['images', 'service_id', 'equipement_id']));
+
+    // Sync services and equipements
+    if ($request->has('service_id')) {
+        $espace->services()->sync($request->input('service_id'));
+    } else {
+        $espace->services()->detach();
+    }
+
+    if ($request->has('equipement_id')) {
+        $espace->equipements()->sync($request->input('equipement_id'));
+    } else {
+        $espace->equipements()->detach();
+    }
+
+    return response()->json(['message' => 'Espace updated successfully', 'espace' => $espace], 200);
+}
+
+
+
 
 
 
